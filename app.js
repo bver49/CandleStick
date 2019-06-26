@@ -2,7 +2,7 @@ var margin = {
     top: 50,
     right: 50,
     bottom: 30,
-    left: 60
+    left: 100
 }
 width = 960 - margin.left - margin.right,
 height = 500 - margin.top - margin.bottom;
@@ -64,7 +64,7 @@ var volumeAxis = d3.axisLeft(yVolume)
 var ohlcAnnotation = techan.plot.axisannotation()
     .axis(yAxis)
     .orient('left')
-    .format(d3.format(',.2f'));
+    .format(d3.format(',d'));
 var timeAnnotation = techan.plot.axisannotation()
     .axis(xAxis)
     .orient('bottom')
@@ -154,7 +154,7 @@ function loadJSON(obj) {
         .append("text")
         .attr("y", -10)
         .style("text-anchor", "end")
-        .text("Bet Cash");
+        .text("彩幣");
     var title = obj["type"] + " " + obj["data"][0][0] + " ~ " + obj["data"][obj["data"].length-1][0] + " 損益";
     svg.append("text")
         .attr("x", (width / 2))
@@ -311,10 +311,10 @@ function redraw() {
         .attr("width", (xScale.bandwidth()));
 }
 
-function onChange(event) {
+function onChange() {
     var reader = new FileReader();
     reader.onload = onReaderLoad;
-    reader.readAsText(event.target.files[0]);
+    reader.readAsText($("#file")[0].files[0]);
 }
 
 function onReaderLoad(event){
