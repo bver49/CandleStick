@@ -128,7 +128,6 @@ function loadJSON(obj) {
     }).sort(function (a, b) {
         return d3.ascending(accessor.d(a), accessor.d(b));
     });
-    console.log(data);
     var newData = jsonData.map(function (d) {
         return {
             date: parseDate(d[0]),
@@ -156,12 +155,13 @@ function loadJSON(obj) {
         .attr("y", -10)
         .style("text-anchor", "end")
         .text("Bet Cash");
+    var title = obj["type"] + " " + obj["data"][0][0] + " ~ " + obj["data"][obj["data"].length-1][0] + " 損益";
     svg.append("text")
         .attr("x", (width / 2))
         .attr("y", 0 - (margin.top / 2))
         .attr("text-anchor", "middle")
         .style("font-size", "24px")
-        .text(obj["title"]);
+        .text(title);
     // Data to display initially
     draw(data.slice(0, data.length), newData);
 }
