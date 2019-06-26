@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+    <div style="width:100%;">
+        <div style="display: inline-block;width:18%;vertical-align: top;">
+            <p>Y軸: 累積損益</p>
+            <p>X軸: 時間</p>
+            <p>下方Bar: 當日投注額</p>
+            <p>上傳資料</p>
+            <input type="file" id="file">
+            <p>資料格式JSON</p>
+            <pre>
+{
+    "title": "圖表標題",
+    "data":[
+        [
+            "當日日期Ymd",
+            "當日損益",
+            "當日投注額"
+        ]
+    ]
+}
+            </pre>
+        </div>
+        <div id="main" style="display: inline-block;width:80%;">
+        </div>
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="techanjs.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    </body>
+</html>
