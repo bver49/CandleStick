@@ -238,9 +238,11 @@ function draw(data, volumeData) {
             dataArr = d;
         });
 
-    svg.select("g.sma.ma-0").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(10)(data)).call(sma0);
-    svg.select("g.sma.ma-1").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(20)(data)).call(sma0);
-    svg.select("g.ema.ma-2").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(50)(data)).call(sma0);
+    if ($("#openma").val() == "1") {
+        svg.select("g.sma.ma-0").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(7)(data)).call(sma0);
+        svg.select("g.sma.ma-1").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(14)(data)).call(sma0);
+        svg.select("g.ema.ma-2").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(30)(data)).call(sma0);
+    }
     svg.select("g.volume.axis").call(volumeAxis);
 
     // 畫十字線並對他設定zoom function
