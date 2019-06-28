@@ -106,7 +106,8 @@ var svg = d3.select("#main")
 var dataArr;
 
 function loadJSON(obj) {
-    svg.selectAll("*").remove(); // 切換不同資料需要重新畫圖，因此需要先清除原先的圖案
+    // 切換不同資料需要重新畫圖，因此需要先清除原先的圖案
+    svg.selectAll("*").remove();
     var accessor = candlestick.accessor();
     var jsonData = obj["data"];
 
@@ -313,6 +314,7 @@ function redraw() {
         .attr("width", (xScale.bandwidth()));
 }
 
+var fileCache;
 function onChange() {
     var reader = new FileReader();
     reader.onload = onReaderLoad;
@@ -321,7 +323,16 @@ function onChange() {
 
 function onReaderLoad(event){
     var obj = JSON.parse(event.target.result);
+    fileCache = obj;
     loadJSON(obj);
+    $("#file").val("");
+}
+
+function reload(){
+    if (typeof fileCache == "object") {
+        loadJSON(fileCache);
+    }
 }
 
 $("#file").on("change", onChange);
+$("#openma").on("change", reload);
