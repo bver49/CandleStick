@@ -68,7 +68,6 @@ var ohlcAnnotation = techan.plot.axisannotation()
 var timeAnnotation = techan.plot.axisannotation()
     .axis(xAxis)
     .orient('bottom')
-    .format(d3.timeFormat('%Y-%m-%d'))
     .translate([0, height]);
 
 // 設定十字線
@@ -113,25 +112,25 @@ function loadJSON(obj) {
 
     var lastday = 0;
     data = jsonData.map(function (d) { // 設定data的格式
-        today = lastday + d[1];
+        today = d[0];
         tmp = {
-            date: parseDate(d[0]),
-            open: lastday,
+            date: d[0],
+            open: 0,
             volume: d[2],
             change: d[1],
-            close: today,
-            percentChange: ((d[1] / today) * 100).toFixed(2),
+            close: d[1],
+            percentChange: 0,
+            t: d[0]
         };
-        tmp["high"] = Math.max(lastday, today);
-        tmp["low"] = Math.min(lastday, today);
-        lastday = today;
+        tmp["high"] = Math.max(0, d[1]);
+        tmp["low"] = Math.min(0, d[1]);
         return tmp;
     }).sort(function (a, b) {
         return d3.ascending(accessor.d(a), accessor.d(b));
     });
     var newData = jsonData.map(function (d) {
         return {
-            date: parseDate(d[0]),
+            date: d[0],
             volume: d[2]
         }
     });
@@ -156,7 +155,7 @@ function loadJSON(obj) {
         .attr("y", -10)
         .style("text-anchor", "end")
         .text("彩幣");
-    var title = obj["type"] + " " + obj["data"][0][0] + " ~ " + obj["data"][obj["data"].length-1][0] + " 損益";
+    var title = "損益";
     svg.append("text")
         .attr("x", (width / 2))
         .attr("y", 0 - (margin.top / 2))
@@ -225,7 +224,7 @@ function draw(data, volumeData) {
         });
 
     // 畫X軸
-    svg.selectAll("g.x.axis").call(xAxis.ticks(7).tickFormat(d3.timeFormat("%m/%d")).tickSize(-height, -height));
+    svg.selectAll("g.x.axis").call(xAxis.ticks(7).tickSize(-height, -height));
 
     //畫K線圖Y軸
     svg.selectAll("g.y.axis").call(yAxis.ticks(10).tickSize(-width, -width));
@@ -239,11 +238,6 @@ function draw(data, volumeData) {
             dataArr = d;
         });
 
-    if ($("#openma").val() == "1") {
-        svg.select("g.sma.ma-0").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(7)(data)).call(sma0);
-        svg.select("g.sma.ma-1").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(14)(data)).call(sma0);
-        svg.select("g.ema.ma-2").attr("clip-path", "url(#candlestickClip)").datum(techan.indicator.sma().period(30)(data)).call(sma0);
-    }
     svg.select("g.volume.axis").call(volumeAxis);
 
     // 畫十字線並對他設定zoom function
@@ -262,12 +256,10 @@ function draw(data, volumeData) {
 
 //設定當移動的時候要顯示的文字
 function move(coords, index) {
-    //    console.log("move");
     var i;
     for (i = 0; i < dataArr.length; i++) {
         if (coords.x === dataArr[i].date) {
-            svgText.text(d3.timeFormat("%Y/%m/%d")(coords.x) + ", 前一日結算：" + dataArr[i].open + ", 當日結算：" + dataArr[i].close + ", 損益：" + dataArr[i].change + ", 注額：" + dataArr[i].volume);
-
+            svgText.text(dataArr[i]['t'] + ' ' + dataArr[i]['change']);
         }
     }
 }
